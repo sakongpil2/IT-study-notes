@@ -1,0 +1,117 @@
+#00 Git 정리 목차
+    - #01 Git 상태 개념
+    - #02 Git 설정 관리
+    - #03 Git Repository 생성
+    - #04 Git 파일 개념
+    - #05 Git Tag 종류
+    - #06 Git 파일 버전 관리
+    - #07 Git 파일 백업 관리
+    - #08 Git Branch 개념
+    - #09 Git Branch 관리
+    - #10 Git WorkFlow 전략
+
+#01 Git 상태 개념
+    - Working Tree
+    - Staging Area
+    - Repository
+
+#02 Git 설정 관리
+    - $ git config --system : 모든 시스템에 적용 (root 권한 필요), /etc/gitconfig 파일
+    - $ git config --global : 특정 사용자에 적용 (현재 사용자에 적용), ~/.gitconfig 파일
+    - $ git config --global user.name : 사용자 Name 설정
+    - $ git config --global user.email : 사용자 email 설정
+    - $ git config --list : 환경설정 리스트 확인
+
+#03 Git Repository 생성
+    - $ git init : 해당 디렉토리에서 Git Repository 생성
+    - $ git clone : 외부 Git Repository 복시 및 로컬에 생성
+        > $ git clone <외부 repository URL> : 외부 Git Repository를 그대로 복사해 생성
+        > $ git clone <외부 repository URL> <신규 Directory명> : 신규 Directory이름으로 Repository Clone 
+
+#04 Git 파일 개념
+    - Untracked : Git에서 관리하지 않는 파일
+    - Tracked : 스냅샷에 포함되어 있는 파일, Git이 알고있는, 관리하는 파일
+        > Unmodified : add 하지 않은 상태
+        > Modified : add는 완료된 상태
+        > Staged : Commit으로 저장소에 기록할수 있는 상태
+
+#05 Git Tag 종류
+    - Lightweight Tag : 특정 커밋에 대한 포인터
+    - Annotated : 태그 관련 세부 내용 지정 및 유지
+
+#06 Git 파일 버전 관리 
+    - .gitignore : Git에서 미 관리할 파일 명시
+    - $ git status : 파일 상태 확인
+    - $ git add : Untracked -> Tracked, Unmodified -> Staged 변경
+    - $ git rm : Staged -> Unstage, Tracked -> Untracked 로 상태 변경
+    - $ git diff : 버전간 변경점 확인
+    - $ git commit : Staged -> commit 변경
+        > $ git commit -a : $ git add & $ git commit
+        > $ git commit -m "<커밋 버전>" : 1라인 commit
+        > $ git commit --amend : 이전 커밋 덮어쓰기
+    - $ git log : 커밋 히스토리 조회
+    - $ git reset : 특정 상태로 HEAD Undo
+        > $ git reset HEAD <file> : Staged -> Unstage로 변경
+    - $ git checkout : 브랜치 변경 or 파일 복구
+        > $ git checkout <file> : Modified 파일 삭제
+        > $ git checkout <tag> : 해당 tag로 이동, detached HEAD 상태가 되며, 브랜치와 다르게 동작
+    - $ git tag : 태그 관리
+        > $ git tag : 태그 조회
+        > $ git tag <Lightweight 태그> : Lightweight 태그 추구
+        > $ git tag -a <Annotated 태그> : Annotated 태그 추가
+        > $ git tag <태그명> <커밋명> : 해당 커밋으로 태그 추가
+
+#07 Git 파일 백업 관리
+    - $ git remote : 원격 저장소 Git 설정
+        > $ git remote add origin : 원격 저장소 추가
+        > $ git remote -v : 등록된 원격저장소 리스트 확인
+        > $ git remote rename <현 원격저장소명> <신 원격저장소명> : 원격저장소 이름 변경
+        > $ git remote remove <원격저장소명> : 원격저장소 삭제
+    - $ git clone : 원격 저장소 Repo 다운로드
+    - $ git fetch : 저장소 동기화
+    - $ git pull : 원격 저장소 Git 다운로드, 보통 $ git fetch 수행 후 pull 수행 
+        > $ git pull <원격저장소명> <브랜치명> : 원격저장소를 브랜치로 다운로드
+        > Already up to date 에러 발생시 아래 명령어 수행
+            . git fetch --all
+            . git reset --hard origin/master
+    - $ git push : 원격 저장소 Git 업로드
+        > $ git push <원격저장소명> <브랜치명> : 원격저장소에 해당 브랜치 업로드
+        > $ git push <원격저장소명> <태그명> : 해당 태그 전송
+        > $ git push <원격저장소명> tags : 모든 태그 전송
+
+#08 Git Branch 개념
+    - 브랜치 : Git Commit 사이를 이동할 수 있는 포인터 개념
+    - Merge 전략
+        > Fast-Forward : Commit을 생성하지 않고 Merge, 두 브랜치가 동일한 Commit을 가지는 경우
+        > 3-way Merge : 3개의 커밋을 Merge함. Merge 후에는 하나의 Commit이됨
+            . 같은 파일의 같은 부분을 다르게 수정하는 경우 Clonflict 발생
+    - Rebase : 두 브랜치의 공통 조상이 되는 base 브랜치를 다른 브랜치의 커밋 지점으로 바꾸어 1열로 만드는것
+    - Cherry-pick : 여러 Commit 중 하나의 Commit만 Rebase 하는 것
+        
+#09 Git Branch 관리
+    - $ git branch :브랜치 관리
+        > $ git branch : 브랜치 리스트 출력
+        > $ git branch <브랜치명> : 브랜치 추가
+        > $ git branch -d <브랜치명> : 브랜치 삭제
+    - $ git checkout : 브랜치 이동
+        > $ git checkout <브랜치명> : 브랜치로 이동 (HEAD 이동)
+        > $ git checkout -b <브랜치명> : 브랜치 생성 후 들어가기
+    - $ git merge : 브랜치 병합
+        > $ git checkout <합칠 브랜치> : 합칠 브랜치로 이동
+        > $ git merge <합쳐질 브랜치> : 현재 브랜치에서 합쳐질 브랜치를 Merge
+    - $ git rebase : 브랜치 Rebase
+        > $ git checkout <합쳐질 브랜치> : 합쳐질 브랜치로 이동
+        > $ git rebase <합칠 브랜치> : 합칠 브랜치의 최종 Commit을 합쳐질 브랜치의 커밋 시작 지점으로 바꿈 (공통 브랜치 - 기본 브랜치 - 추가 브랜치)
+        > $ git checkout <합칠 브랜치> : 합칠 브랜치로 이동
+        > $ git merge <합쳐질 브랜치> : 합칠 브랜치를 합쳐질 브랜치에 Merge
+    - $ Cherry-pick
+        > $ git cherry-pick <합칠 Commit> : 합칠 커밋과 Merge
+        > $ git cherry-pick --abort : cherry-pick 이전의 상태로 롤백
+
+#10 Git 브랜치 전략
+    - Long-Running 브랜치 : topic > dev > master 등의 순서대로 안정화 된 코드만 Merge
+    - 토픽 브랜치 : 짧은 호흡의 브랜치를 계속 만들면서 Merge 후, 삭제
+    - 리모트 브랜치 : 원격지에 회사GIt - 팀 Git - 파트 GIt - 데스크탑 구조로 브랜치 구성
+
+# 참고자료
+    - https://git-scm.com/book/en/v2
